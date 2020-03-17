@@ -3,7 +3,21 @@
 <mapper namespace="com.github.plugin.sysdict.dao.SysDictMapper">
 
   <select id="findAll" resultType="com.github.plugin.sysdict.bean.SysDict">
-    SELECT * FROM sys_dict WHERE status=1
+    SELECT
+        type_code,
+        type_name,
+
+        dict_value,
+        dict_name,
+        dict_en_name,
+
+        dict_full_value,
+        dict_full_name,
+        dict_full_en_name
+    FROM
+        sys_dict
+    WHERE `status` = 1
+    ORDER BY type_code,parent_id,display_order
   </select>
 
 </mapper>
