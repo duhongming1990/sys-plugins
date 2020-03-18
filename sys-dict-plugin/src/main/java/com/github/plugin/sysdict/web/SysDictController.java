@@ -1,15 +1,10 @@
 package com.github.plugin.sysdict.web;
 
 import com.github.plugin.sysdict.bean.DictDemo;
-import com.github.plugin.sysdict.service.SysDictService;
-import com.github.plugin.sysdict.utils.DictUtils;
+import com.github.plugin.sysdict.common.utils.DictUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-
-import static com.github.plugin.sysdict.utils.DictUtils.EN;
 
 /**
  * @Author duhongming

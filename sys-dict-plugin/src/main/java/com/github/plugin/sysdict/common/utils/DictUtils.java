@@ -1,7 +1,7 @@
-package com.github.plugin.sysdict.utils;
+package com.github.plugin.sysdict.common.utils;
 
 import com.github.plugin.sysdict.bean.SysDict;
-import com.github.plugin.sysdict.config.SpringContextHolder;
+import com.github.plugin.sysdict.service.SpringContextHolder;
 import com.github.plugin.sysdict.dao.SysDictMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;

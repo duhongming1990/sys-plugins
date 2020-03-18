@@ -1,7 +1,7 @@
 /**
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
-package com.github.plugin.sysdict.config;
+package com.github.plugin.sysdict.service;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;

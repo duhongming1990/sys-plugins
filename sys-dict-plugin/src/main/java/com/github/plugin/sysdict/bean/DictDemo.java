@@ -1,6 +1,6 @@
 package com.github.plugin.sysdict.bean;
 
-import com.github.plugin.sysdict.annotation.DictSign;
+import com.github.plugin.sysdict.common.annotation.DictSign;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

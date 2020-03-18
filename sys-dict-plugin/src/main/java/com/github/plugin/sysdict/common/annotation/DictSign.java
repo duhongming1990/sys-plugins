@@ -1,4 +1,4 @@
-package com.github.plugin.sysdict.annotation;
+package com.github.plugin.sysdict.common.annotation;
 
 public @interface DictSign {
     /**
