@@ -1,97 +1,99 @@
 package com.github.plugin.sysdict.common.utils;
 
-import com.github.plugin.sysdict.bean.SysDict;
 import com.github.plugin.sysdict.service.SpringContextHolder;
-import com.github.plugin.sysdict.dao.SysDictMapper;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
+import com.github.plugin.sysdict.service.SysDictService;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
- * @Author duhongming
- * @Email 19919902414@189.cn
- * @Date 2019/4/17 20:13
- * 字典工具类
+ * @author duhongming
+ * @version 1.0
+ * @description 字典工具类
+ * @date 2020/3/19 22:48
  */
 @Getter
 @Setter
 @Accessors(fluent = true)
 @Slf4j
 public class DictUtils {
-    public static final String EN = "en";
-    private static final String EN_KEY = "dict:${k}:en";
-
-    public static final String CH = "ch";
-    private static final String CH_KEY = "dict:${k}:ch";
-
-    private String language = CH;
 
     /**
-     * 从Spring容器中获取SysDictMapper、StringRedisTemplate
+     * 从Spring容器中获取SysDictService
      */
-    private final SysDictMapper sysDictMapper = SpringContextHolder.getBean(SysDictMapper.class);
-    private final StringRedisTemplate redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
-
-    //中文字典
-    private final Table<String, String, String> chDicts = HashBasedTable.create();
-    //英文字典
-    private final Table<String, String, String> enDicts = HashBasedTable.create();
-
+    private static final SysDictService sysDictService = SpringContextHolder.getBean(SysDictService.class);
 
     /**
      * 单例使用该工具类
      */
     public static final DictUtils me = new DictUtils();
 
+    /**
+     * 目前缓存的key数
+     */
+    private static final Integer INITIAL_CAPACITY = 16;
+    private static final Integer MAX_CAPACITY = 512;
+    /**
+     * 缓存在5秒内没有更新则重新读取数据
+     */
+    private static final Integer EXPIRE_TIME = 5;
+
+    /**
+     * 用户的LRU算法:
+     */
+    private static LoadingCache<Key, String> localCache = CacheBuilder.newBuilder()
+            .initialCapacity(INITIAL_CAPACITY).maximumSize(MAX_CAPACITY)
+            //缓存在5秒内没有更新则重新读取数据
+            .expireAfterWrite(EXPIRE_TIME, TimeUnit.SECONDS)
+            .build(new CacheLoader<Key, String>() {
+                //默认的数据加载实现,当调用get取值的时候,如果key没有对应的值,就调用这个方法进行加载.
+                @Override
+                public String load(Key key) {
+                    String mapKey = Key.REDIS_KEY.replace("${k}", key.typeCode()) + key.language();
+                    String result = sysDictService.getByRedis(mapKey, key.dictValue());
+                    if (StringUtils.isNotBlank(result)) {
+                        return result;
+                    }
+                    return sysDictService.getByDatabase(key);
+                }
+            });
+
     private DictUtils() {
         super();
-        //初始化字典容器
-        init();
     }
 
     /**
-     * 初始化，请求一次数据库
-     */
-    private void init() {
-
-        //从DB获取源数据
-        List<SysDict> sysDicts = sysDictMapper.findAll();
-
-        //初始化Table对象
-        for (SysDict sysDict : sysDicts) {
-            chDicts.put(sysDict.getTypeCode(), sysDict.getDictValue(), sysDict.getDictName());
-            enDicts.put(sysDict.getTypeCode(), sysDict.getDictValue(), sysDict.getDictEnName());
-        }
-
-        //初始化Redis对象
-        Map<String, Map<String, String>> chMaps = chDicts.rowMap();
-        Map<String, Map<String, String>> enMaps = enDicts.rowMap();
-        chMaps.forEach((k, v) -> redisTemplate.opsForHash().putAll(CH_KEY.replace("${k}", k), v));
-        enMaps.forEach((k, v) -> redisTemplate.opsForHash().putAll(EN_KEY.replace("${k}", k), v));
-    }
-
-    /**
-     * @param typeCode       类型码
-     * @param dictValue      value值
+     * @param key            联合key
      * @param defaultContent 默认content
      * @return
      */
-    public String getDictName(String typeCode, String dictValue, String defaultContent) {
-        if (StringUtils.isNotBlank(typeCode) && StringUtils.isNotBlank(dictValue)) {
-            if (StringUtils.endsWith(CH, language)) {
-                return chDicts.get(typeCode, dictValue);
-            } else if (StringUtils.endsWith(EN, language)) {
-                return enDicts.get(typeCode, dictValue);
+    public String getDictName(Key key, String defaultContent) {
+        try {
+            String value = localCache.get(key);
+            if (StringUtils.isBlank(value)) {
+                return defaultContent;
+            } else {
+                return value;
             }
+        } catch (ExecutionException e) {
+            log.error("从Guava缓存中获取异常:{}",e);
         }
         return defaultContent;
+    }
+
+    /**
+     * @param key 联合key
+     * @return
+     */
+    public String getDictName(Key key) {
+        return getDictName(key, StringUtils.EMPTY);
     }
 }
