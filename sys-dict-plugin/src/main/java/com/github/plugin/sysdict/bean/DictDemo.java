@@ -1,7 +1,6 @@
 package com.github.plugin.sysdict.bean;
 
 import com.github.plugin.sysdict.common.dict.DictField;
-import com.github.plugin.sysdict.common.dict.DictSign;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
