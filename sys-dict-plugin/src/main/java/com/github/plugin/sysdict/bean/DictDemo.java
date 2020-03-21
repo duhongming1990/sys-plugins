@@ -1,6 +1,7 @@
 package com.github.plugin.sysdict.bean;
 
-import com.github.plugin.sysdict.common.annotation.DictSign;
+import com.github.plugin.sysdict.common.dict.DictField;
+import com.github.plugin.sysdict.common.dict.DictSign;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,15 @@ import lombok.Setter;
 @Setter
 public class DictDemo {
 
-    @DictSign
+    @DictField
     private String round;
 
-    @DictSign
+    @DictField
     private String ipoType;
 
-    @DictSign(funcation = "handleIpoInfo(round,ipoType)")
+    @DictField(funcation = "handleIpoInfo(round,ipoType)")
     private String ipoInfo;
 
-    @DictSign
+    @DictField
     private String companyIpoStatus;
 }

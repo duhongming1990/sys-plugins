@@ -1,5 +1,6 @@
 package com.github.plugin.sysdict.service;
 
+import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.bean.SysDict;
 import com.github.plugin.sysdict.common.utils.Key;
 
@@ -45,4 +46,10 @@ public interface SysDictService {
      * @return
      */
     String getByDatabase(Key key);
+
+    /**
+     * 演示demo
+     * @return
+     */
+    DictDemo dictDemo();
 }

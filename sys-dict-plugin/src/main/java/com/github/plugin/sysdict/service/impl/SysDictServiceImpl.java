@@ -1,5 +1,6 @@
 package com.github.plugin.sysdict.service.impl;
 
+import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.bean.SysDict;
 import com.github.plugin.sysdict.common.utils.Key;
 import com.github.plugin.sysdict.dao.SysDictMapper;
@@ -87,5 +88,14 @@ public class SysDictServiceImpl implements SysDictService {
             return dictName;
         }
         return StringUtils.EMPTY;
+    }
+
+    @Override
+    public DictDemo dictDemo() {
+        DictDemo dictDemo = new DictDemo();
+        dictDemo.setRound("1");
+        dictDemo.setIpoType("2");
+        dictDemo.setCompanyIpoStatus("3");
+        return dictDemo;
     }
 }
