@@ -2,13 +2,12 @@ package com.github.plugin.sysdict.common.excel;
 
 import com.github.plugin.sysdict.common.excel.annotation.ExcelField;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,9 +23,8 @@ import java.util.*;
 /**
  * 导入Excel文件（支持“XLS”和“XLSX”格式）
  */
+@Slf4j
 public class ImportExcel {
-
-    private static final Logger log = LoggerFactory.getLogger(ImportExcel.class);
 
     /**
      * 工作薄对象
@@ -338,7 +336,7 @@ public class ImportExcel {
                                         "fieldtype." + valType.getSimpleName() + "Type")).getMethod("getValue", String.class).invoke(null, val.toString());
                             }
                         }
-                        if(StringUtils.isNotBlank(ef.format())){
+                        if (StringUtils.isNotBlank(ef.format())) {
                             val = DateUtil.getJavaDate(Double.parseDouble(val.toString()));
                             DateFormat formater = new SimpleDateFormat(ef.format());
                             val = formater.format(val);

@@ -2,10 +2,12 @@ package com.github.plugin.sysdict.service.impl;
 
 import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.bean.SysDict;
+import com.github.plugin.sysdict.common.dict.DictSign;
 import com.github.plugin.sysdict.common.utils.Key;
 import com.github.plugin.sysdict.dao.SysDictMapper;
 import com.github.plugin.sysdict.service.SysDictService;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import org.apache.commons.lang3.StringUtils;
@@ -91,11 +93,18 @@ public class SysDictServiceImpl implements SysDictService {
     }
 
     @Override
+    @DictSign
     public DictDemo dictDemo() {
         DictDemo dictDemo = new DictDemo();
-        dictDemo.setRound("1");
+        dictDemo.setRound("127");
         dictDemo.setIpoType("2");
         dictDemo.setCompanyIpoStatus("3");
         return dictDemo;
+    }
+
+    @Override
+    @DictSign
+    public List<DictDemo> dictDemos() {
+        return Lists.newArrayList(dictDemo());
     }
 }

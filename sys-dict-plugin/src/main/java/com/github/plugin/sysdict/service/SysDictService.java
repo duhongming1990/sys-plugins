@@ -2,6 +2,7 @@ package com.github.plugin.sysdict.service;
 
 import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.bean.SysDict;
+import com.github.plugin.sysdict.common.dict.DictSign;
 import com.github.plugin.sysdict.common.utils.Key;
 
 import java.util.List;
@@ -52,4 +53,5 @@ public interface SysDictService {
      * @return
      */
     DictDemo dictDemo();
+    List<DictDemo> dictDemos();
 }

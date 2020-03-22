@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Aspect
 @Component
-public class ControllerAOP {
+public class ResponseResultAspect {
 
     @Pointcut("execution(public com.github.plugin.sysdict.common.response.JsonResult *(..))")
     public void webLog() {

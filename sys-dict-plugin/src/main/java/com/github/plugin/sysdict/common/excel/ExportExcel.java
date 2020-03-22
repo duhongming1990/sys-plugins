@@ -4,6 +4,7 @@ import com.github.plugin.sysdict.common.excel.annotation.ExcelField;
 import com.github.plugin.sysdict.common.utils.DictUtils;
 import com.github.plugin.sysdict.common.utils.Key;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -28,9 +29,8 @@ import java.util.*;
 /**
  * 导出Excel文件（导出“XLSX”格式，支持大数据量导出   @see org.apache.poi.ss.SpreadsheetVersion）
  */
+@Slf4j
 public class ExportExcel {
-
-    private static final Logger log = LoggerFactory.getLogger(ExportExcel.class);
 
     /**
      * 工作薄对象

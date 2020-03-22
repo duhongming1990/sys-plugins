@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author duhongming
  * @version 1.0
@@ -30,6 +32,12 @@ public class SysDictController {
     @GetMapping("/demo")
     public JsonResult<DictDemo> dict(){
         DictDemo dictDemo = sysDictService.dictDemo();
+        return new JsonResult<>().setData(dictDemo);
+    }
+
+    @GetMapping("/demos")
+    public JsonResult<List<DictDemo>> dicts(){
+        List<DictDemo> dictDemo = sysDictService.dictDemos();
         return new JsonResult<>().setData(dictDemo);
     }
 }
