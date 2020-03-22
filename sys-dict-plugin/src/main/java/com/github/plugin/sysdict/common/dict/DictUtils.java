@@ -1,4 +1,4 @@
-package com.github.plugin.sysdict.common.utils;
+package com.github.plugin.sysdict.common.dict;
 
 import com.github.plugin.sysdict.service.SpringContextHolder;
 import com.github.plugin.sysdict.service.SysDictService;

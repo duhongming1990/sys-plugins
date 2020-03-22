@@ -1,22 +1,22 @@
 package com.github.plugin.sysdict.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.bean.SysDict;
 import com.github.plugin.sysdict.common.dict.DictSign;
-import com.github.plugin.sysdict.common.utils.Key;
+import com.github.plugin.sysdict.common.dict.Key;
 import com.github.plugin.sysdict.dao.SysDictMapper;
 import com.github.plugin.sysdict.service.SysDictService;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -52,9 +52,20 @@ public class SysDictServiceImpl implements SysDictService {
             enDicts.put(sysDict.getTypeCode(), sysDict.getDictValue(), sysDict.getDictEnName());
         }
 
-        //初始化Redis对象
         Map<String, Map<String, String>> chMaps = chDicts.rowMap();
         Map<String, Map<String, String>> enMaps = enDicts.rowMap();
+
+        //初始化到Json文件
+        try {
+            JSON.writeJSONString(new FileOutputStream(new File("dictionay-ch.json")),chMaps);
+            JSON.writeJSONString(new FileOutputStream(new File("dictionay-en.json")),chMaps);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //初始化Redis对象
         chMaps.forEach((k, v) -> putAll(Key.REDIS_KEY.replace("${k}", k) + Key.CH, v));
         enMaps.forEach((k, v) -> putAll(Key.REDIS_KEY.replace("${k}", k) + Key.EN, v));
     }
@@ -66,7 +77,10 @@ public class SysDictServiceImpl implements SysDictService {
 
     @Override
     public void putAll(String key, Map<String, String> map) {
-        stringRedisTemplate.opsForHash().putAll(key, map);
+        BiMap<String,String> biMap = HashBiMap.create(map);
+        stringRedisTemplate.opsForHash().putAll(key, biMap);
+        //反转key，用于导入Excel数据
+        stringRedisTemplate.opsForHash().putAll(key+"r", biMap.inverse());
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.github.plugin.sysdict.web;
 
 import com.github.plugin.sysdict.bean.DictDemo;
 import com.github.plugin.sysdict.common.response.JsonResult;
-import com.github.plugin.sysdict.common.utils.DictUtils;
-import com.github.plugin.sysdict.common.utils.Key;
+import com.github.plugin.sysdict.common.dict.DictUtils;
+import com.github.plugin.sysdict.common.dict.Key;
 import com.github.plugin.sysdict.service.SysDictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +24,13 @@ public class SysDictController {
     @Autowired
     private SysDictService sysDictService;
 
+    /**
+     * 初始化字典
+     */
     @GetMapping("/init")
-    public String init(){
-        return DictUtils.me.getDictName(Key.of().typeCode("round").dictValue("1"));
+    public JsonResult<String> init(){
+        sysDictService.init();
+        return new JsonResult<>().setMessage("字典初始化成功！");
     }
 
     @GetMapping("/demo")

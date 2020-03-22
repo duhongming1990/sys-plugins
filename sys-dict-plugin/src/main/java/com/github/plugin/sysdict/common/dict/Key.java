@@ -1,4 +1,4 @@
-package com.github.plugin.sysdict.common.utils;
+package com.github.plugin.sysdict.common.dict;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +34,11 @@ public class Key {
      * value值
      */
     private String dictValue;
+
+    /**
+     * name值
+     */
+    private String dictName;
 
     /**
      * 国际化语言

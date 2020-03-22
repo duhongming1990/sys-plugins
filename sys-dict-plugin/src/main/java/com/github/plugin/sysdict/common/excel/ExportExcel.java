@@ -1,8 +1,8 @@
 package com.github.plugin.sysdict.common.excel;
 
 import com.github.plugin.sysdict.common.excel.annotation.ExcelField;
-import com.github.plugin.sysdict.common.utils.DictUtils;
-import com.github.plugin.sysdict.common.utils.Key;
+import com.github.plugin.sysdict.common.dict.DictUtils;
+import com.github.plugin.sysdict.common.dict.Key;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,8 +12,6 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
